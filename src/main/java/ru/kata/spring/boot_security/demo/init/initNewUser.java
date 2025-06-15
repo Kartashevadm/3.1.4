@@ -28,17 +28,17 @@ public class initNewUser implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        // Очистка таблиц в правильном порядке
+
         userRepository.deleteAll();
         roleRepository.deleteAll();
 
-        // Создание ролей
+
         Role adminRole = new Role("ROLE_ADMIN");
         Role userRole = new Role("ROLE_USER");
         roleRepository.save(adminRole);
         roleRepository.save(userRole);
 
-        // Создание пользователей
+
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(adminRole);
         createUser("admin", "admin@mail.com", "admin", adminRoles);

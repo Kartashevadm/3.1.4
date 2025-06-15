@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -16,13 +17,13 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class AdminController {
 
 	private final UserService userService;
-	private final RoleServiceImpl roleServiceImpl;
+	private final RoleService roleService;;
 
 	@Lazy
 	@Autowired
-	public AdminController(UserService userService, RoleServiceImpl roleServiceImpl) {
+	public AdminController(UserService userService, RoleService roleService) {
 		this.userService = userService;
-		this.roleServiceImpl = roleServiceImpl;
+		this.roleService = roleService;
 	}
 
 	@GetMapping()
@@ -34,7 +35,7 @@ public class AdminController {
 	@GetMapping("/new")
 	public String getNewUserForm(Model model) {
 		model.addAttribute("user", new User());
-		model.addAttribute("availableRoles", roleServiceImpl.getAllRoles());
+		model.addAttribute("availableRoles", roleService.getAllRoles());
 		return "new";
 	}
 
@@ -50,7 +51,7 @@ public class AdminController {
 	@GetMapping("/edit")
 	public String getEditUserForm(@RequestParam("id") Long id, Model model) {
 		model.addAttribute("user", userService.getUserById(id));
-		model.addAttribute("availableRoles", roleServiceImpl.getAllRoles());
+		model.addAttribute("availableRoles", roleService.getAllRoles());
 		return "edit";
 	}
 
