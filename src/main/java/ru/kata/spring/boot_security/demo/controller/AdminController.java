@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
-import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 
@@ -26,17 +26,25 @@ public class AdminController {
 		this.roleService = roleService;
 	}
 
-	@GetMapping()
-	public String getAllUsers(Model model) {
+	@GetMapping
+	public String showAdminPanel(Model model) {
+		model.addAttribute("user", new User());
 		model.addAttribute("users", userService.getAllUsers());
+		model.addAttribute("availableRoles", roleService.getAllRoles());
 		return "admin";
 	}
+
+//	@GetMapping()
+//	public String getAllUsers(Model model) {
+//		model.addAttribute("users", userService.getAllUsers());
+//		return "admin";
+//	}
 
 	@GetMapping("/new")
 	public String getNewUserForm(Model model) {
 		model.addAttribute("user", new User());
 		model.addAttribute("availableRoles", roleService.getAllRoles());
-		return "new";
+		return "new11";
 	}
 
 	@PostMapping("/new")
@@ -52,7 +60,7 @@ public class AdminController {
 	public String getEditUserForm(@RequestParam("id") Long id, Model model) {
 		model.addAttribute("user", userService.getUserById(id));
 		model.addAttribute("availableRoles", roleService.getAllRoles());
-		return "edit";
+		return "edit11";
 	}
 
 	@PostMapping("/update")
