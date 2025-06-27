@@ -2,19 +2,13 @@ package ru.kata.spring.boot_security.demo.models;
 
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -37,16 +31,13 @@ public class User implements UserDetails {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @Transient
     private List<Long> roleIds;
 
     public User() {
 
-    }
-    public List<Long> getRoleIds() {
-        return roleIds;
     }
 
     public User(String username, String email, String password, Set<Role> roles) {
@@ -58,9 +49,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> (GrantedAuthority) role)
-                .collect(Collectors.toList());
+        return roles;
     }
 
     public Long getId() {
@@ -85,7 +74,6 @@ public class User implements UserDetails {
         return username;
     }
 
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -104,6 +92,13 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
     }
 
     @Override
@@ -142,7 +137,6 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(username, email);
     }
 
@@ -155,5 +149,5 @@ public class User implements UserDetails {
                 ", roles=" + roles +
                 '}';
     }
-}
 
+}
