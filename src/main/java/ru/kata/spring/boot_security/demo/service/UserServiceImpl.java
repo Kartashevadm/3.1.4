@@ -43,10 +43,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void createUser(User user) {
         if (user.getUsername() == null || user.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty!");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+
         List<Long> roleIds = user.getRoleIds();
         if (roleIds != null && !roleIds.isEmpty()) {
             Set<Role> roles = roleIds.stream()
@@ -89,7 +93,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailWithRoles(email)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 

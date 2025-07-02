@@ -24,18 +24,17 @@ public class initNewUser implements CommandLineRunner {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         userRepository.deleteAll();
         createUser("admin", "admin@mail.ru", "admin", "ROLE_ADMIN");
         createUser("user", "user@mail.ru", "user", "ROLE_USER");
 
     }
 
-    private void createUser(String username, String email, String password, String roleName) {
+    public void createUser(String username, String email, String password, String roleName) {
         if (userRepository.findByEmail(email).isEmpty()) {
             User user = new User();
             user.setUsername(username);
